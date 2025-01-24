@@ -16,13 +16,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserBussinesService, UserBussinesService>();
 builder.Services.AddScoped<IEmailBussinesService, EmailBussinesService>();
 builder.Services.AddScoped<IAuthBussinesService, AuthBussinesService>();
-builder.Services.AddScoped<IAmazonBussinessService, AmazonBussinessService>();
 
 // DAMS Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAmazonS3Service, AmazonS3Service>();
 //builder.Services.AddTransient<JobsSchedular, JobsSchedular>();
 //JAYANT
 // Add JobsScheduler as a Hosted Service
