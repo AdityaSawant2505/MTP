@@ -11,12 +11,14 @@ builder.Services.AddControllers();
 // Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 
 // BAMS Services
 builder.Services.AddScoped<IUserBussinesService, UserBussinesService>();
 builder.Services.AddScoped<IEmailBussinesService, EmailBussinesService>();
 builder.Services.AddScoped<IAuthBussinesService, AuthBussinesService>();
 builder.Services.AddScoped<IAmazonBussinessService, AmazonBussinessService>();
+builder.Services.AddScoped<ICurrencyExchangeBussines, CurrencyExchangeBussines>();
 
 
 // DAMS Services
@@ -24,6 +26,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAmazonS3Service, AmazonS3Service>();
+builder.Services.AddScoped<ICurrencyExchange, CurrencyExchange>();
 //builder.Services.AddTransient<JobsSchedular, JobsSchedular>();
 //JAYANT
 // Add JobsScheduler as a Hosted Service
