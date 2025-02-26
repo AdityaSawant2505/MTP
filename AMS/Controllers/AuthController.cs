@@ -10,7 +10,6 @@ namespace AMS.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthBussinesService _authManagerService;
-
         public AuthController(IAuthBussinesService authManagerService)
         {
             _authManagerService = authManagerService;

@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using DAMS.Models.User;
+using System.Data;
 
 namespace DAMS.Implementations
 {
@@ -70,6 +71,36 @@ namespace DAMS.Implementations
             }
         }
 
+        public async Task<List<GetUsers>> GetAllUsersAsync(Dictionary<string, bool> sortParameters = null)
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(_connectionString))
+                {
+                    await sqlConnection.OpenAsync();
+                    string orderBy = null;
+                    if (sortParameters != null && sortParameters.Any())
+                    {
+                        var orderByList = sortParameters.Select(kvp => $"{kvp.Key} {(kvp.Value ? "ASC" : "DESC")}");
+                        orderBy = string.Join(", ", orderByList);
+                    }
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@OrderBy", orderBy);
+                    var users = await sqlConnection.QueryAsync<GetUsers>(
+                        "GetAllUsers",
+                        parameters,
+                        commandType: CommandType.StoredProcedure
+                    );
+                    return users.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error in {nameof(GetAllUsersAsync)}: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<List<string>> GetPermissions(long userId)
         {
             try
@@ -118,8 +149,7 @@ namespace DAMS.Implementations
                 Console.Error.WriteLine($"Error in {nameof(GetRoles)}: {ex.Message}");
                 throw;
             }
-        }
-
+        }       
         public async Task<bool> CreateUser(InsertUserRequest request)
         {
             try

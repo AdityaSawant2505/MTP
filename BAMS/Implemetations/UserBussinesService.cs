@@ -23,6 +23,11 @@ namespace BAMS.Implemetations
             return await _userService.CreateUser(request);
         }
 
+        public async Task<List<GetUsers>> GetAllUsersAsync(Dictionary<string, bool> sortParameters = null)
+        {
+            return await _userService.GetAllUsersAsync(sortParameters);
+        }
+
         public async Task<List<string>> GetPermissions(long userId)
         {
             return await _userService.GetPermissions(userId);

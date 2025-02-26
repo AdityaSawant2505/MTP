@@ -27,8 +27,14 @@ namespace AMS.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetPermissions")]
+        [HttpGet("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers([FromQuery] Dictionary<string, bool> sortParameters = null)
+        {
+            var result = await _usersManagerService.GetAllUsersAsync(sortParameters);
+            return Ok(result);
+        }
 
+        [HttpGet("GetPermissions")]
         public async Task<IActionResult> GetPermissions(long userid)
         {
             var result = await _usersManagerService.GetPermissions(userid);
@@ -50,17 +56,12 @@ namespace AMS.Controllers
             {
                 return BadRequest("User data is null.");
             }
-
             try
             {
-                // Hash password
                 var (hashedPassword, salt) = _passwordHelper.HashPassword(request.Password);
-
-                // Set the password hash and salt in the request
                 request.PasswordHash = hashedPassword;
                 request.PasswordSalt = salt;
 
-                // Insert user data into the database using UsersService (stored procedure)
                 var result = await _usersManagerService.CreateUser(request);
 
                 if (result)
@@ -74,7 +75,6 @@ namespace AMS.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception for debugging purposes
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

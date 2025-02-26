@@ -13,5 +13,6 @@ namespace DAMS.Interface
         Task<GetUsers> GetUserByName(string name);
         Task<List<string>> GetPermissions(long userId);
         Task<List<string>> GetRoles(long userId);
+        Task<List<GetUsers>> GetAllUsersAsync(Dictionary<string, bool> sortParameters = null);
     }
 }

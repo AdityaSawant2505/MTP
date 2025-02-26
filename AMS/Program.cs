@@ -2,6 +2,7 @@
 using BAMS.Interface;
 using DAMS.Implementations;
 using DAMS.Interface;
+using DAMS.Models.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
@@ -73,7 +74,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // ✅ Add HttpClient
 builder.Services.AddHttpClient();
-
+builder.Services.AddScoped<PasswordHelper>();
 // ✅ Register Services (Dependency Injection)
 builder.Services.AddScoped<IUserBussinesService, UserBussinesService>();
 builder.Services.AddScoped<IEmailBussinesService, EmailBussinesService>();
