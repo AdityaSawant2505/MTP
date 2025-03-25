@@ -78,5 +78,13 @@ namespace AMS.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("DownloadUsersExcel")]
+        public async Task<IActionResult> DownloadUsersExcel([FromQuery] Dictionary<string, bool> sortParameters = null)
+        {
+            var fileContents = await _usersManagerService.GenerateUsersExcelAsync(sortParameters);
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Users.xlsx");
+        }
+
     }
 }

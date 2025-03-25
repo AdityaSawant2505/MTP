@@ -23,6 +23,12 @@ namespace BAMS.Implemetations
             return await _userService.CreateUser(request);
         }
 
+        public async Task<byte[]> GenerateUsersExcelAsync(Dictionary<string, bool> sortParameters = null)
+        {
+            return await _userService.GenerateUsersExcelAsync(sortParameters);
+        }
+
+
         public async Task<List<GetUsers>> GetAllUsersAsync(Dictionary<string, bool> sortParameters = null)
         {
             return await _userService.GetAllUsersAsync(sortParameters);

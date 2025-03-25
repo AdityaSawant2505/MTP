@@ -4,7 +4,6 @@ using DAMS.Implementations;
 using DAMS.Interface;
 using DAMS.Models.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -16,10 +15,8 @@ var jwtSecretKey = jwtSettings["SecretKey"];
 var jwtIssuer = jwtSettings["Issuer"];
 var jwtAudience = jwtSettings["Audience"];
 
-// ✅ Add Controllers
 builder.Services.AddControllers();
 
-// ✅ Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -37,15 +34,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// ✅ Add Authorization
 builder.Services.AddAuthorization();
 
-// ✅ Add Swagger with JWT Support
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
 
-    // 🔹 Configure Swagger to accept Bearer Token
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -72,17 +66,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ✅ Add HttpClient
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<PasswordHelper>();
-// ✅ Register Services (Dependency Injection)
+
 builder.Services.AddScoped<IUserBussinesService, UserBussinesService>();
 builder.Services.AddScoped<IEmailBussinesService, EmailBussinesService>();
 builder.Services.AddScoped<IAuthBussinesService, AuthBussinesService>();
 builder.Services.AddScoped<IAmazonBussinessService, AmazonBussinessService>();
 builder.Services.AddScoped<ICurrencyExchangeBussines, CurrencyExchangeBussines>();
 
-// DAMS Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -103,17 +95,16 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// ✅ Configure Middleware Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseSession();         // ✅ Use session middleware
-app.UseAuthentication();  // ✅ Ensure Authentication Middleware is added
-app.UseAuthorization();   // ✅ Ensure Authorization Middleware is added
+app.UseSession();         
+app.UseAuthentication();  
+app.UseAuthorization();  
 
-app.MapControllers();     // ✅ Map Controllers
+app.MapControllers();     
 
 app.Run();

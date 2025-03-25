@@ -14,5 +14,7 @@ namespace BAMS.Interface
         Task<List<string>> GetPermissions(long userId);
         Task<List<string>> GetRoles(long userId);
         Task<List<GetUsers>> GetAllUsersAsync(Dictionary<string, bool> sortParameters = null);
+
+        Task<byte[]> GenerateUsersExcelAsync(Dictionary<string, bool> sortParameters = null);
     }
 }

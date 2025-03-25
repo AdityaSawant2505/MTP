@@ -9,6 +9,8 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using DAMS.Models.User;
 using System.Data;
+using Microsoft.AspNetCore.Mvc;
+using ClosedXML.Excel;
 
 namespace DAMS.Implementations
 {
@@ -192,5 +194,50 @@ namespace DAMS.Implementations
                 throw;
             }
         }
+
+        public async Task<byte[]> GenerateUsersExcelAsync(Dictionary<string, bool> sortParameters = null)
+        {
+            var users = await GetAllUsersAsync(sortParameters);
+            return await GenerateExcelAsync(users);
+        }
+        public async Task<byte[]> GenerateExcelAsync<T>(List<T> data)
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Data");
+
+                if (data.Any())
+                {
+                    var properties = data.First().GetType().GetProperties();
+                    var headers = properties.Select(p => p.Name).ToList();
+
+                    for (int i = 0; i < headers.Count; i++)
+                    {
+                        worksheet.Cell(1, i + 1).Value = headers[i];
+                    }
+
+                    // Write data
+                    int row = 2;
+                    foreach (var item in data)
+                    {
+                        for (int col = 0; col < properties.Length; col++)
+                        {
+                            var value = properties[col].GetValue(item);
+                            worksheet.Cell(row, col + 1).Value = value?.ToString();
+                        }
+                        row++;
+                    }
+
+                    worksheet.Columns().AdjustToContents();
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    return stream.ToArray();
+                }
+            }
+        }
+
     }
 }
